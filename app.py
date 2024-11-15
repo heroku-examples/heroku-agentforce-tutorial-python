@@ -1,7 +1,8 @@
 import logging
-
 from flask import Flask, jsonify, request
 from flask_restx import Api, Resource, fields
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 api = Api(app,
@@ -9,6 +10,20 @@ api = Api(app,
           description="Basic Agentforce Action example",
           version='0.1.0'
           )
+
+auth = HTTPBasicAuth()
+
+# Define a hardcoded user with a hashed password
+users = {
+    "heroku": generate_password_hash("agent")
+}
+
+# Verify the username and password
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and check_password_hash(users.get(username), password):
+        return username
+    return None
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -21,7 +36,7 @@ class AgentResponse:
     def __init__(self, message):
         self.message = message
     def to_dict(self):
-        return {"message": self.message}        
+        return {"message": self.message}
 
 # Define the AgentRequest model for the input
 agent_request_model = api.model('AgentRequest', {
@@ -36,13 +51,14 @@ agent_request_model = api.model('AgentRequest', {
 agent_response_model = api.model('AgentResponse', {
     'message': fields.String(
         required=True,
-        message='A response to the agent'
+        description='A response to the agent'
     )
 })
 
 ### API Routes
 @api.route('/process')
 class Process(Resource):
+    @auth.login_required  # Protect the endpoint with HTTP Basic Auth
     @api.expect(agent_request_model)  # Use the model here    
     @api.response(200, 'Success', agent_response_model)  # Define the response model here
     def post(self):
