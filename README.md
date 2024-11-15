@@ -44,7 +44,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Once the application is running navigate to the URL below, click the **Try it Out** button andcomplete the basic authentication as covered above.
+Once the application is running navigate to the URL below, click the **Try it Out** button and complete the basic authentication as covered above.
 
 ```
 http://127.0.0.1:5000
