@@ -3,7 +3,7 @@ Creating Agentforce Custom Actions with Heroku - Python
 
 This tutorial explains how to deploy a Heroku application written in Python that can be used to build an Agentforce custom action, extending the capabilities of any Agentforce agent with the power of Heroku's fully managed, elastic compute services.
 
-> **_IN A HURRY?_** This application has already been deployed publicly and is available at [https://...](https://...) so that you can skip straight to [configuring Heroku based actions in your Salesforce organization](xxx) to try it out first.
+> **_IN A HURRY?_** This application has already been deployed publicly and is available at [https://...](https://agentforce-tutorial-python-7894e9215571.herokuapp.com/) so that you can skip straight to [configuring Heroku based actions in your Salesforce organization](https://github.com/heroku-examples/heroku-agentforce-tutorial?tab=readme-ov-file#step-2---creating-a-named-credential) to try it out first.
 
 App Authentication
 ------------------
@@ -28,7 +28,7 @@ heroku create myagentaction
 git push heroku main
 ```
 
-Once this has been deployed take note of the web URL then refer to the instructins in [configuring Heroku based actions in your Salesforce organization](xxx)
+Once this has been deployed take note of the web URL then refer to the instructins in [configuring Heroku based actions in your Salesforce organization](https://github.com/heroku-examples/heroku-agentforce-tutorial?tab=readme-ov-file#step-2---creating-a-named-credential)
 
 Running and Testing Locally
 ---------------------------
