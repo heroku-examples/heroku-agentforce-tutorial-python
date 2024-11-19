@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request
 from flask_restx import Api, Resource, fields
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
+from badgecreator import create_badge
 
 app = Flask(__name__)
 api = Api(app,
@@ -56,16 +57,13 @@ agent_response_model = api.model('AgentResponse', {
     )
 })
 
-### API Routes
+# API Routes
 @api.route('/process')
 class Process(Resource):
     @auth.login_required  # Protect the endpoint with HTTP Basic Auth
     @api.expect(agent_request_model)  # Use the model here    
     @api.response(200, 'Success', agent_response_model)  # Define the response model here
     def post(self):
-        """
-        This is an API endpoint for the Agent Action
-        """
         # Parse the JSON data from the request body
         data = request.json
         if not data or 'name' not in data:
@@ -75,8 +73,21 @@ class Process(Resource):
         agentRequest = AgentRequest(data['name'])
         logger.info("Received query: %s", agentRequest.name)
         
-        # Create AgentResponse instance
-        message = "Welcome " + agentRequest.name + " to the Matrix"
+        # Create badge and embed in HTML
+        try:
+            base64_image = create_badge("Heroku Agent Action", f"Deployed by {agentRequest.name}")
+            html_fragment = f'<img src="data:image/png;base64,{base64_image}">'
+            message = html_fragment
+
+            # Save debug.html with the generated image
+            debug_html = f"<body style='background: black'>{html_fragment}</body>"
+            with open("debug.html", "w") as debug_file:
+                debug_file.write(debug_html)
+                logger.info("Saved debug.html")
+        except Exception as e:
+            logger.error("Error generating badge: %s", str(e))
+            message = "Error generating badge"
+
         agentResponse = AgentResponse(message)
         logger.info("Result is: %s", agentResponse)
         return agentResponse.to_dict()
