@@ -1,12 +1,82 @@
-import io
-from PIL import Image, ImageDraw, ImageFont
+"""
+Badge Creator Module
+
+This module provides functionality for generating custom badges with a logo,
+rotated text box, and text. It uses the Python Imaging Library (Pillow) to
+create the badge and encodes it as a Base64 string for easy embedding in HTML
+or other formats.
+
+Functionality:
+- Dynamically generates a badge with customizable text lines.
+- Includes a logo at the top of the badge.
+- Adds a rotated text box with a shadow effect and text inside.
+- Outputs the badge as a Base64-encoded PNG string.
+
+Dependencies:
+- Pillow (PIL): For image creation and manipulation.
+- base64: For encoding the badge image.
+- io: For in-memory image handling.
+- math: For geometric calculations.
+- os: For file path operations.
+
+Functions:
+    create_badge(line1: str, line2: str) -> str:
+        Creates a badge with the specified text lines and returns it as a
+        Base64-encoded PNG string.
+
+Example Usage:
+    from badgecreator import create_badge
+
+    # Generate a badge with custom text
+    badge_base64 = create_badge("Heroku Agent Action", "Deployed by Neo")
+
+    # Embed the badge in an HTML fragment
+    html_fragment = f'<img src="data:image/png;base64,{badge_base64}">'
+
+Directory Structure:
+    The module expects the following directory and file setup:
+    - A `resources` directory containing a logo image (`heroku_logo.png`).
+    - A font file (`arial.ttf`) for rendering text.
+
+Error Handling:
+- Raises `FileNotFoundError` if the logo file is not found in the expected path.
+- Falls back to the default font if the specified font file is unavailable.
+
+This module is designed to be integrated into other applications where badge
+generation and dynamic content embedding are required.
+"""
 import base64
-import os
+import io
 import math
+import os
+
+from PIL import Image, ImageDraw, ImageFont
+
 
 def create_badge(line1: str, line2: str) -> str:
+    """
+        Generates a badge with a logo, rotated text box, and text.
+
+        The badge includes a logo image at the top, a rotated text box with a
+        shadow, and two lines of text. The output is a Base64-encoded PNG image
+        suitable for embedding in HTML.
+
+        Args:
+            line1 (str): The first line of text to include in the badge.
+            line2 (str): The second line of text to include in the badge.
+
+        Returns:
+            str: A Base64-encoded PNG image of the generated badge.
+
+        Raises:
+            FileNotFoundError: If the logo image is not found in the expected path.
+
+        Example:
+            badge_base64 = create_badge("Heroku Agent Action", "Deployed by Neo")
+            html_fragment = f'<img src="data:image/png;base64,{badge_base64}">'
+        """
     # Paths and colors
-    logo_path = os.path.join("resources", "herokulogo.png")
+    logo_path = os.path.join("resources", "heroku_logo.png")
     font_path = "arial.ttf"  # Use the initial font (Arial Regular)
     background_color = "white"
     text_color = "black"
@@ -50,13 +120,12 @@ def create_badge(line1: str, line2: str) -> str:
     dynamic_badge_height = logo_height + box_height + 2 * padding
 
     # Create badge canvas
-    badge = Image.new("RGBA", (badge_width, dynamic_badge_height), background_color)
-    draw = ImageDraw.Draw(badge)
+    badge = Image.new("RGBA", (int(badge_width), int(dynamic_badge_height)), background_color)
 
     # Place logo at the top
     logo_x = (badge_width - logo_width) // 2
     logo_y = padding
-    badge.paste(logo, (logo_x, logo_y), logo)
+    badge.paste(logo, (int(logo_x), int(logo_y)), logo)
 
     # Calculate rotated box position (adjusted below the logo with minimal overlap)
     box_x = (badge_width - box_width) // 2
@@ -110,8 +179,8 @@ def create_badge(line1: str, line2: str) -> str:
 
     # Paste the rotated box onto the badge
     rotated_box_position = (
-        box_x - (box_center_x - box_width // 2),
-        box_y - (box_center_y - box_height // 2),
+        int(box_x - (box_center_x - box_width // 2)),
+        int(box_y - (box_center_y - box_height // 2)),
     )
     badge.paste(rotated_box, rotated_box_position, rotated_box)
 
