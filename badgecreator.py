@@ -125,7 +125,7 @@ def create_badge(line1: str, line2: str) -> str:
     # Place logo at the top
     logo_x = (badge_width - logo_width) // 2
     logo_y = padding
-    badge.paste(logo, (logo_x, logo_y), logo)
+    badge.paste(logo, (int(logo_x), int(logo_y)), logo)
 
     # Calculate rotated box position (adjusted below the logo with minimal overlap)
     box_x = (badge_width - box_width) // 2
@@ -179,8 +179,8 @@ def create_badge(line1: str, line2: str) -> str:
 
     # Paste the rotated box onto the badge
     rotated_box_position = (
-        box_x - (box_center_x - box_width // 2),
-        box_y - (box_center_y - box_height // 2),
+        int(box_x - (box_center_x - box_width // 2)),
+        int(box_y - (box_center_y - box_height // 2)),
     )
     badge.paste(rotated_box, rotated_box_position, rotated_box)
 
