@@ -35,7 +35,7 @@ Dependencies:
 import logging
 import os
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from flask_httpauth import HTTPBasicAuth
 from flask_restx import Api, Resource, fields
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -145,7 +145,10 @@ class Process(Resource):
         # Parse the JSON data from the request body
         data = request.json
         if not data or 'name' not in data:
-            return jsonify({"error": "Invalid request, 'name' field is required"}), 400
+            response = make_response(jsonify({"error": "Invalid request, 'name' field is required"}))
+            response.status_code = 400
+            response.headers['Content-Type'] = 'application/json'
+            return response
 
         # Create MyRequest instance from JSON data
         agent_request = AgentRequest(data['name'])
