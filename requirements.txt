@@ -3,3 +3,5 @@ flask-restx
 flask-httpauth
 openai
 pillow
+pytest
+werkzeug
