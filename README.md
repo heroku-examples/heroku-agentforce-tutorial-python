@@ -2,7 +2,7 @@
 Creating Agentforce Custom Actions with Heroku - Python
 ========================================================
 
-> 💡 **Heroku Integration Pilot Notice:** This branch is only intended for developers who have joined the Heroku Integration Pilot. if you have not please refer to the main branch of this repository for alternative instructions.
+> 💡 **Heroku Integration Pilot Only:**<br/>This branch is only intended for developers who have joined the Heroku Integration Pilot. If you have are not part of the pilot please refer to the main branch of this repository for alternative instructions.
 
 This tutorial explains how to deploy a Heroku application written in Python that can be used to build an Agentforce custom action, extending the capabilities of any Agentforce agent with the power of Heroku's fully managed, elastic compute services.
 
