@@ -1,1 +1,1 @@
-web: web: APP_PORT=3000 heroku-integration-service-mesh python app.py
+web: APP_PORT=3000 heroku-integration-service-mesh python app.py
