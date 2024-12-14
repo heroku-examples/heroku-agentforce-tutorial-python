@@ -6,7 +6,6 @@ The API provides a single endpoint (`/process`) that accepts a JSON payload cont
 generates a badge with the provided name, and returns an HTML fragment of the badge.
 
 Key Features:
-- Implements HTTP Basic Authentication to protect the `/process` endpoint.
 - Utilizes Flask-RESTx for API documentation and validation.
 - Generates a badge using an external `badgecreator` module and returns it as part of the response.
 - Logs incoming requests and badge generation activity for debugging purposes.
@@ -28,17 +27,13 @@ Usage:
 Dependencies:
     - Flask
     - Flask-RESTx
-    - Flask-HTTPAuth
-    - Werkzeug (for password hashing)
     - badgecreator (external module for badge generation)
 """
 import logging
 import os
 
 from flask import Flask, jsonify, request, make_response
-from flask_httpauth import HTTPBasicAuth
 from flask_restx import Api, Resource, fields
-from werkzeug.security import generate_password_hash, check_password_hash
 
 from badgecreator import create_badge
 
@@ -48,30 +43,6 @@ api = Api(app,
           description="Basic Agentforce Action example",
           version='0.1.0'
           )
-
-auth = HTTPBasicAuth()
-
-# Define a hardcoded user with a hashed password
-users = {
-    "heroku": generate_password_hash("agent")
-}
-
-# Verify the username and password
-@auth.verify_password
-def verify_password(username, password):
-    """
-    Verifies a user's credentials using HTTP Basic Auth.
-
-    Parameters:
-        username (str): The provided username.
-        password (str): The provided password.
-
-    Returns:
-        str: The username if the authentication succeeds, otherwise None.
-    """
-    if username in users and check_password_hash(users.get(username), password):
-        return username
-    return None
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -129,7 +100,6 @@ class Process(Resource):
     RESTful resource for processing agent requests and returning a response.
     """
 
-    @auth.login_required  # Protect the endpoint with HTTP Basic Auth
     @api.expect(agent_request_model)  # Use the model here    
     @api.response(200, 'Success', agent_response_model)  # Define the response model here
     def post(self):
@@ -177,6 +147,6 @@ if __name__ == '__main__':
     """
     Entry point for the application. Starts the Flask server and runs the application.
     """
-    # Use the PORT environment variable if present, otherwise default to 5000
-    port = int(os.environ.get('PORT', 5000))
+    # Use the APP_PORT environment variable if present, otherwise default to 5000
+    port = int(os.environ.get('APP_PORT', 5000))
     app.run(debug=True, host='0.0.0.0', port=port)

@@ -1,0 +1,86 @@
+{
+    "swagger": "2.0",
+    "basePath": "/",
+    "paths": {
+        "/process": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/AgentResponse"
+                        }
+                    }
+                },
+                "summary": "Handles POST requests to process an agent request",
+                "description": "Parses input data, generates a badge with the provided name, and returns\nan HTML fragment of the badge or an error message if the badge creation fails.\n\nReturns:\n    dict: A dictionary containing the response to the agent.",
+                "operationId": "post_process",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/AgentRequest"
+                        }
+                    }
+                ],
+                "tags": [
+                    "default"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "Agentforce Action",
+        "version": "0.1.0",
+        "description": "Basic Agentforce Action example"
+    },
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "default",
+            "description": "Default namespace"
+        }
+    ],
+    "definitions": {
+        "AgentRequest": {
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "A name from the agent request",
+                    "default": "Neo"
+                }
+            },
+            "type": "object"
+        },
+        "AgentResponse": {
+            "required": [
+                "message"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "A response to the agent"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "responses": {
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        },
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        }
+    }
+}

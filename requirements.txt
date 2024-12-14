@@ -4,4 +4,3 @@ flask-httpauth
 openai
 pillow
 pytest
-werkzeug
